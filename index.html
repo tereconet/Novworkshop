@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TERECONET G2T 11/2026 — Registration</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,500;0,700;1,400&family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy: #002147;
+      --navy-light: #0d3563;
+      --charcoal: #1f2937;
+      --muted: #4b5563;
+      --border: #d1d5db;
+      --bg: #f3f4f6;
+      --white: #ffffff;
+      --accent-bg: #eef3f8;
+      --ok-bg: #ecfdf5;
+      --ok-border: #10b981;
+      --ok-text: #065f46;
+      --warn-bg: #fffbeb;
+      --warn-border: #f59e0b;
+      --warn-text: #92400e;
+      --err-bg: #fef2f2;
+      --err-border: #ef4444;
+      --err-text: #991b1b;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 24px 14px 48px;
+      background: var(--bg);
+      color: var(--charcoal);
+      font-family: 'Be Vietnam Pro', system-ui, -apple-system, sans-serif;
+      line-height: 1.55;
+    }
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      background: var(--white);
+      border-top: 6px solid var(--navy);
+      border-radius: 8px;
+      box-shadow: 0 4px 20px rgba(0, 33, 71, 0.08);
+      overflow: hidden;
+    }
+    .header {
+      background: var(--navy);
+      color: var(--white);
+      padding: 28px 28px 24px;
+    }
+    .org-tag {
+      font-size: 0.78rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      opacity: 0.85;
+      margin-bottom: 8px;
+    }
+    .header h1 {
+      font-family: 'Alegreya', Georgia, serif;
+      font-size: 1.85rem;
+      line-height: 1.25;
+      margin: 0 0 10px;
+      font-weight: 700;
+    }
+    .speaker-line {
+      font-size: 0.95rem;
+      opacity: 0.95;
+      margin: 0;
+    }
+    .content { padding: 26px 28px 32px; }
+    .inapp-banner {
+      display: none;
+      background: var(--warn-bg);
+      border: 1px solid var(--warn-border);
+      color: var(--warn-text);
+      padding: 14px 16px;
+      border-radius: 6px;
+      margin-bottom: 20px;
+      font-size: 0.9rem;
+    }
+    .info-grid {
+      background: var(--accent-bg);
+      border-left: 4px solid var(--navy);
+      padding: 16px 18px;
+      border-radius: 4px;
+      margin-bottom: 22px;
+      font-size: 0.92rem;
+    }
+    .info-grid h2 {
+      font-family: 'Alegreya', Georgia, serif;
+      color: var(--navy);
+      font-size: 1.2rem;
+      margin: 0 0 8px;
+    }
+    .info-grid ul {
+      margin: 6px 0 12px 18px;
+      padding: 0;
+    }
+    .info-grid ul:last-child { margin-bottom: 0; }
+    .section-title {
+      font-family: 'Alegreya', Georgia, serif;
+      color: var(--navy);
+      font-size: 1.3rem;
+      border-bottom: 1px solid #e5e7eb;
+      padding-bottom: 6px;
+      margin: 24px 0 16px;
+    }
+    .field { margin-bottom: 16px; }
+    label.field-label {
+      display: block;
+      font-weight: 600;
+      font-size: 0.92rem;
+      margin-bottom: 6px;
+      color: var(--charcoal);
+    }
+    .req { color: #dc2626; }
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 0.95rem;
+      font-family: inherit;
+      background: var(--white);
+    }
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--navy);
+      box-shadow: 0 0 0 2px rgba(0, 33, 71, 0.12);
+    }
+    .mode-cards {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+    .mode-card {
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 16px;
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s;
+      position: relative;
+    }
+    .mode-card.active {
+      border-color: var(--navy);
+      background: #f8fafc;
+    }
+    .mode-card.disabled {
+      background: #f9fafb;
+      opacity: 0.78;
+      cursor: not-allowed;
+    }
+    .mode-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-weight: 600;
+    }
+    .mode-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .slot-badge {
+      font-size: 0.78rem;
+      padding: 3px 9px;
+      border-radius: 99px;
+      background: var(--navy);
+      color: var(--white);
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .slot-badge.full { background: #991b1b; }
+    .mode-desc {
+      font-size: 0.86rem;
+      color: var(--muted);
+      margin: 6px 0 0 26px;
+    }
+    .gps-box {
+      margin-top: 10px;
+      margin-left: 26px;
+    }
+    .btn-secondary {
+      background: var(--white);
+      color: var(--navy);
+      border: 1px solid var(--navy);
+      padding: 7px 13px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border-radius: 5px;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .btn-secondary:hover { background: var(--accent-bg); }
+    .btn-secondary:disabled { opacity: 0.55; cursor: not-allowed; }
+    .status-msg {
+      display: none;
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: 6px;
+      font-size: 0.86rem;
+    }
+    .status-ok { display: block; background: var(--ok-bg); border: 1px solid var(--ok-border); color: var(--ok-text); }
+    .status-warn { display: block; background: var(--warn-bg); border: 1px solid var(--warn-border); color: var(--warn-text); }
+    .status-err { display: block; background: var(--err-bg); border: 1px solid var(--err-border); color: var(--err-text); }
+    .bank-card {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 16px;
+      font-size: 0.92rem;
+    }
+    .bank-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 5px 0;
+      border-bottom: 1px dashed #e5e7eb;
+      gap: 10px;
+    }
+    .bank-row:last-child { border-bottom: none; }
+    .btn-submit {
+      width: 100%;
+      background: var(--navy);
+      color: var(--white);
+      border: none;
+      padding: 13px 20px;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: inherit;
+      margin-top: 10px;
+    }
+    .btn-submit:hover { background: var(--navy-light); }
+    .btn-submit:disabled { opacity: 0.6; cursor: wait; }
+    .hidden { display: none; }
+    .file-hint { font-size: 0.82rem; color: var(--muted); margin-top: 4px; }
+    .success-screen {
+      display: none;
+      text-align: center;
+      padding: 36px 20px;
+    }
+    .success-screen h2 {
+      font-family: 'Alegreya', Georgia, serif;
+      color: var(--navy);
+      font-size: 1.7rem;
+      margin-bottom: 10px;
+    }
+    @media (max-width: 540px) {
+      .header, .content { padding: 20px 18px; }
+      .header h1 { font-size: 1.5rem; }
+      .mode-header { flex-wrap: wrap; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="org-tag">TERECONET • G2T 11/2026</div>
+      <h1>Philosophy of Science: What Prospective and Beginning Doctoral Students Should Know</h1>
+      <p class="speaker-line"><strong>Speaker:</strong> Dr. Le Van Canh — Associate Professor of Applied Linguistics, Independent Researcher</p>
+    </div>
+
+    <div class="content" id="formWrapper">
+      <div class="inapp-banner" id="inAppBanner">
+        <strong>Lưu ý trình duyệt:</strong> Bạn đang mở form trong ứng dụng (Facebook/Messenger/Zalo). Nếu bạn ở cách TP.HCM từ <strong>45 km trở lên</strong> và muốn đăng ký suất <strong>Online</strong>, vui lòng nhấn biểu tượng <strong>⋯</strong> ở góc màn hình → chọn <strong>Mở bằng trình duyệt (Safari / Chrome)</strong> để cấp quyền định vị GPS.
+        <div style="margin-top:8px;">
+          <button type="button" class="btn-secondary" onclick="copyPageLink()">Sao chép đường dẫn form</button>
+        </div>
+      </div>
+
+      <div class="info-grid">
+        <h2>Thông tin buổi họp mặt</h2>
+        <ul>
+          <li><strong>Thời gian:</strong> 14g – 17g ngày 21/11/2026</li>
+          <li><strong>Địa điểm:</strong> Phương Nam Education — 357 Lê Hồng Phong, Phường Vườn Lài, TPHCM</li>
+          <li><strong>Quy định Online:</strong> Hình thức <strong>Online (giới hạn 50 suất)</strong> chỉ mở cho người tham dự đang ở cách địa điểm tổ chức <strong>từ 45 km trở lên</strong> (xác thực GPS tự động trên trình duyệt).</li>
+        </ul>
+        <h2>Đối tượng & Phí tham dự</h2>
+        <ul>
+          <li><strong>Đối tượng tham dự:</strong> Giảng viên đại học; Nhà nghiên cứu tự do; Học viên cao học bậc Thạc sĩ, Tiến sĩ; Sinh viên có đam mê tìm hiểu về nghiên cứu khoa học.</li>
+          <li><strong>TERECONET Affiliate:</strong> 50.000 VNĐ (vui lòng upload thư xác nhận membership)</li>
+          <li><strong>Sinh viên:</strong> 50.000 VNĐ (vui lòng upload thẻ sinh viên làm minh chứng)</li>
+          <li><strong>Đối tượng khác:</strong> 100.000 VNĐ</li>
+        </ul>
+        <h2>Lưu ý</h2>
+        <ul>
+          <li>Thầy / cô / các bạn sinh viên đăng ký tham dự trực tiếp vui lòng đến sớm 15 phút để ổn định chỗ ngồi.</li>
+          <li>Các khách đăng ký tham dự đã đóng phí sẽ được kiểm tra thông tin trước khi vào tham dự.</li>
+        </ul>
+      </div>
+
+      <form id="regForm">
+        <div class="section-title">1. Hình thức tham dự</div>
+        <div class="field">
+          <div class="mode-cards">
+            <label class="mode-card active" id="onsiteCard">
+              <div class="mode-header">
+                <span class="mode-left">
+                  <input type="radio" name="attendanceMode" value="Onsite" checked onchange="syncModeUI()" />
+                  <span>Tham dự Trực tiếp (Onsite tại TPHCM)</span>
+                </span>
+              </div>
+              <p class="mode-desc">Tại Phương Nam Education — 357 Lê Hồng Phong, Phường Vườn Lài, TPHCM.</p>
+            </label>
+
+            <div class="mode-card disabled" id="onlineCard">
+              <div class="mode-header">
+                <label class="mode-left" style="cursor:inherit;">
+                  <input type="radio" name="attendanceMode" id="onlineRadio" value="Online" disabled onchange="syncModeUI()" />
+                  <span>Tham dự Trực tuyến (Online — Khoảng cách ≥ 45 km)</span>
+                </label>
+                <span class="slot-badge" id="slotBadge">Đang kiểm tra suất...</span>
+              </div>
+              <p class="mode-desc">Dành riêng cho người tham dự cách địa điểm tổ chức từ 45 km trở lên (tối đa 50 suất).</p>
+              <div class="gps-box">
+                <button type="button" class="btn-secondary" id="gpsBtn" onclick="verifyGPS()">📍 Xác thực vị trí GPS để mở khóa Online</button>
+                <div id="gpsStatus" class="status-msg"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-title">2. Thông tin cá nhân</div>
+        <div class="field">
+          <label class="field-label">Họ và tên <span class="req">*</span></label>
+          <input type="text" id="fullName" required placeholder="Nguyễn Văn A" />
+        </div>
+
+        <div class="field">
+          <label class="field-label">Email nhận xác nhận <span class="req">*</span></label>
+          <input type="email" id="email" required placeholder="example@gmail.com" />
+        </div>
+
+        <div class="field">
+          <label class="field-label">Số điện thoại liên hệ <span class="req">*</span></label>
+          <input type="tel" id="phone" required placeholder="090xxxxxxx" />
+        </div>
+
+        <div class="field">
+          <label class="field-label">Đơn vị công tác / Trường đang theo học <span class="req">*</span></label>
+          <input type="text" id="affiliation" required placeholder="Tên trường đại học / viện nghiên cứu / đơn vị..." />
+        </div>
+
+        <div class="field">
+          <label class="field-label">Đối tượng tham dự <span class="req">*</span></label>
+          <select id="role" required>
+            <option value="">-- Chọn nhóm đối tượng --</option>
+            <option value="Giảng viên đại học">Giảng viên đại học</option>
+            <option value="Nhà nghiên cứu tự do">Nhà nghiên cứu tự do</option>
+            <option value="Học viên cao học bậc Thạc sĩ, Tiến sĩ">Học viên cao học bậc Thạc sĩ, Tiến sĩ</option>
+            <option value="Sinh viên">Sinh viên có đam mê tìm hiểu về nghiên cứu khoa học</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label class="field-label">Tỉnh / Thành phố hiện tại <span class="req">*</span></label>
+          <input type="text" id="province" required placeholder="Ví dụ: TP. Hồ Chí Minh, Cần Thơ, Đà Nẵng, Hà Nội..." />
+        </div>
+
+        <div class="section-title">3. Phí tham dự & Minh chứng</div>
+        <div class="field">
+          <label class="field-label">Phân loại phí tham dự <span class="req">*</span></label>
+          <select id="feeCategory" required onchange="toggleEligibilityUpload()">
+            <option value="">-- Chọn mức phí tham dự --</option>
+            <option value="TERECONET Affiliate">TERECONET Affiliate: 50.000 VNĐ (upload thư xác nhận membership)</option>
+            <option value="Sinh viên">Sinh viên: 50.000 VNĐ (upload thẻ sinh viên làm minh chứng)</option>
+            <option value="Đối tượng khác">Đối tượng khác: 100.000 VNĐ</option>
+          </select>
+        </div>
+
+        <div class="field hidden" id="eligibilityField">
+          <label class="field-label" id="eligibilityLabel">Upload minh chứng đối tượng <span class="req">*</span></label>
+          <input type="file" id="eligibilityFile" accept="image/*,.pdf" />
+          <div class="file-hint">Chấp nhận ảnh chụp rõ nét (JPG, PNG) hoặc tệp PDF (tối đa 5 MB).</div>
+        </div>
+
+        <div class="bank-card">
+          <div style="font-weight:700; color:var(--navy); margin-bottom:8px;">Tài khoản thu phí</div>
+          <div class="bank-row"><span>Ngân hàng:</span><strong>Sacombank</strong></div>
+          <div class="bank-row">
+            <span>Số tài khoản:</span>
+            <span>
+              <strong id="acctNum">060155585342</strong>
+              <button type="button" class="btn-secondary" style="padding:3px 8px; margin-left:6px; font-size:0.78rem;" onclick="copyAccount()">Sao chép</button>
+            </span>
+          </div>
+          <div class="bank-row"><span>Chủ tài khoản:</span><strong>TRẦN THANH VŨ</strong></div>
+          <div class="bank-row"><span>Nội dung CK:</span><span><strong>G2T1126 [Họ tên] [SĐT]</strong></span></div>
+        </div>
+
+        <div class="field">
+          <label class="field-label">Upload biên lai chuyển khoản phí tham dự <span class="req">*</span></label>
+          <input type="file" id="receiptFile" accept="image/*,.pdf" required />
+          <div class="file-hint">Vui lòng tải lên ảnh chụp màn hình giao dịch thành công hoặc tệp PDF (tối đa 5 MB).</div>
+        </div>
+
+        <div id="submitError" class="status-msg"></div>
+        <button type="submit" class="btn-submit" id="submitBtn">Gửi đăng ký tham dự</button>
+      </form>
+    </div>
+
+    <div class="content success-screen" id="successScreen">
+      <h2>Đăng ký thành công!</h2>
+      <p id="successDetail"></p>
+      <p style="color:var(--muted); font-size:0.92rem;">Ban Tổ chức TERECONET sẽ kiểm tra thông tin đóng phí và gửi thông báo xác nhận đến email của bạn trước buổi họp mặt.</p>
+    </div>
+  </div>
+
+  <script>
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx0FsE5BDXqfENHiMoOnvMZrxHd57YCqCXiFJKJMV_xrrHIi4V4racIzF8qm3u9NPSO4g/exec';
+
+    const VENUE_LAT = 10.763216;
+    const VENUE_LNG = 106.675506;
+    const MIN_ONLINE_KM = 45;
+
+    let remainingOnlineSlots = 50;
+    let userCoords = null;
+
+    // 1. Detect Facebook / Messenger / Zalo in-app browsers
+    (function detectInAppBrowser() {
+      const ua = navigator.userAgent || navigator.vendor || '';
+      if (/FBAN|FBAV|FB_IAB|Messenger|Instagram|Zalo|Line/i.test(ua)) {
+        document.getElementById('inAppBanner').style.display = 'block';
+      }
+    })();
+
+    // 2. Fetch live remaining Online slots on page load
+    async function fetchOnlineSlots() {
+      const badge = document.getElementById('slotBadge');
+      const gpsBtn = document.getElementById('gpsBtn');
+      try {
+        const res = await fetch(SCRIPT_URL, { method: 'GET', redirect: 'follow' });
+        const data = await res.json();
+        if (data.ok) {
+          remainingOnlineSlots = data.remainingOnline;
+          if (remainingOnlineSlots <= 0) {
+            badge.textContent = 'Đã đủ 50/50 suất';
+            badge.classList.add('full');
+            gpsBtn.disabled = true;
+            gpsBtn.textContent = 'Đã hết suất Online';
+          } else {
+            badge.textContent = 'Còn ' + remainingOnlineSlots + '/' + data.maxOnline + ' suất';
+          }
+        }
+      } catch (e) {
+        badge.textContent = 'Giới hạn 50 suất';
+      }
+    }
+    fetchOnlineSlots();
+
+    // 3. Haversine distance formula (km)
+    function calcDistanceKm(lat1, lon1, lat2, lon2) {
+      const R = 6371;
+      const toRad = d => (d * Math.PI) / 180;
+      const dLat = toRad(lat2 - lat1);
+      const dLon = toRad(lon2 - lon1);
+      const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+      return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    }
+
+    // 4. Browser GPS verification
+    function verifyGPS() {
+      const statusEl = document.getElementById('gpsStatus');
+      const gpsBtn = document.getElementById('gpsBtn');
+      const onlineRadio = document.getElementById('onlineRadio');
+      const onlineCard = document.getElementById('onlineCard');
+
+      if (remainingOnlineSlots <= 0) {
+        statusEl.className = 'status-msg status-err';
+        statusEl.textContent = 'Rất tiếc, 50 suất Online đã được đăng ký hết.';
+        return;
+      }
+
+      if (!navigator.geolocation) {
+        statusEl.className = 'status-msg status-err';
+        statusEl.textContent = 'Trình duyệt này không hỗ trợ định vị GPS. Vui lòng mở bằng Safari hoặc Chrome.';
+        return;
+      }
+
+      gpsBtn.disabled = true;
+      statusEl.className = 'status-msg status-warn';
+      statusEl.textContent = 'Đang kiểm tra vị trí GPS... Vui lòng chọn "Cho phép / Allow" khi trình duyệt hiển thị thông báo.';
+
+      navigator.geolocation.getCurrentPosition(
+        function(pos) {
+          gpsBtn.disabled = false;
+          const lat = pos.coords.latitude;
+          const lng = pos.coords.longitude;
+          const acc = pos.coords.accuracy;
+          const distKm = calcDistanceKm(VENUE_LAT, VENUE_LNG, lat, lng);
+          userCoords = { lat: lat, lng: lng, accuracy: acc, distKm: distKm };
+
+          if (distKm >= MIN_ONLINE_KM) {
+            onlineRadio.disabled = false;
+            onlineRadio.checked = true;
+            onlineCard.classList.remove('disabled');
+            syncModeUI();
+            statusEl.className = 'status-msg status-ok';
+            statusEl.textContent = 'Xác thực hợp lệ: Vị trí của bạn cách địa điểm ' + distKm.toFixed(1) + ' km (≥ 45 km). Đã mở khóa đăng ký Online!';
+          } else {
+            onlineRadio.disabled = true;
+            onlineRadio.checked = false;
+            document.querySelector('input[name="attendanceMode"][value="Onsite"]').checked = true;
+            syncModeUI();
+            statusEl.className = 'status-msg status-err';
+            statusEl.textContent = 'Vị trí hiện tại cách địa điểm ' + distKm.toFixed(1) + ' km (< 45 km). Suất Online chỉ mở cho người ở cách địa điểm từ 45 km trở lên — vui lòng đăng ký tham dự Trực tiếp (Onsite).';
+          }
+        },
+        function(err) {
+          gpsBtn.disabled = false;
+          statusEl.className = 'status-msg status-err';
+          if (err.code === 1) {
+            statusEl.textContent = 'Quyền truy cập Vị trí đã bị từ chối. Nếu bạn ở cách TPHCM ≥ 45 km, vui lòng mở link bằng Chrome hoặc Safari và cấp quyền Vị trí (Location) để mở khóa Online.';
+          } else {
+            statusEl.textContent = 'Không thể lấy tín hiệu GPS (' + err.message + '). Vui lòng mở bằng Chrome hoặc Safari trên điện thoại và thử lại.';
+          }
+        },
+        { enableHighAccuracy: true, timeout: 12000, maximumAge: 0 }
+      );
+    }
+
+    function syncModeUI() {
+      const selected = document.querySelector('input[name="attendanceMode"]:checked').value;
+      document.getElementById('onsiteCard').classList.toggle('active', selected === 'Onsite');
+      document.getElementById('onlineCard').classList.toggle('active', selected === 'Online');
+    }
+
+    function toggleEligibilityUpload() {
+      const cat = document.getElementById('feeCategory').value;
+      const box = document.getElementById('eligibilityField');
+      const label = document.getElementById('eligibilityLabel');
+      const input = document.getElementById('eligibilityFile');
+
+      if (cat === 'TERECONET Affiliate') {
+        box.classList.remove('hidden');
+        label.innerHTML = 'Upload thư xác nhận TERECONET Membership <span class="req">*</span>';
+        input.required = true;
+      } else if (cat === 'Sinh viên') {
+        box.classList.remove('hidden');
+        label.innerHTML = 'Upload thẻ sinh viên làm minh chứng <span class="req">*</span>';
+        input.required = true;
+      } else {
+        box.classList.add('hidden');
+        input.required = false;
+        input.value = '';
+      }
+    }
+
+    function copyAccount() {
+      navigator.clipboard.writeText('060155585342');
+      alert('Đã sao chép số tài khoản Sacombank: 060155585342');
+    }
+
+    function copyPageLink() {
+      navigator.clipboard.writeText(window.location.href);
+      alert('Đã sao chép đường dẫn! Hãy mở Safari hoặc Chrome và dán vào thanh địa chỉ.');
+    }
+
+    // 5. Light client-side image compression for fast mobile uploads
+    function prepareFilePayload(file) {
+      return new Promise((resolve, reject) => {
+        if (!file) return resolve(null);
+        if (file.size > 6 * 1024 * 1024) {
+          return reject(new Error('Tệp "' + file.name + '" vượt quá 6 MB. Vui lòng chọn tệp nhỏ hơn.'));
+        }
+        if (file.type.startsWith('image/') && file.size > 700 * 1024) {
+          const reader = new FileReader();
+          reader.onload = e => {
+            const img = new Image();
+            img.onload = () => {
+              const maxDim = 1600;
+              let w = img.width, h = img.height;
+              if (w > maxDim || h > maxDim) {
+                if (w > h) { h = Math.round((h * maxDim) / w); w = maxDim; }
+                else { w = Math.round((w * maxDim) / h); h = maxDim; }
+              }
+              const canvas = document.createElement('canvas');
+              canvas.width = w;
+              canvas.height = h;
+              canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+              const dataUrl = canvas.toDataURL('image/jpeg', 0.82);
+              resolve({
+                name: file.name.replace(/\.[^.]+$/, '') + '.jpg',
+                mimeType: 'image/jpeg',
+                base64: dataUrl.split(',')[1]
+              });
+            };
+            img.onerror = () => reject(new Error('Không thể đọc tệp ảnh.'));
+            img.src = e.target.result;
+          };
+          reader.readAsDataURL(file);
+        } else {
+          const reader = new FileReader();
+          reader.onload = e => {
+            resolve({
+              name: file.name,
+              mimeType: file.type || 'application/octet-stream',
+              base64: e.target.result.split(',')[1]
+            });
+          };
+          reader.onerror = () => reject(new Error('Không thể đọc tệp đính kèm.'));
+          reader.readAsDataURL(file);
+        }
+      });
+    }
+
+    // 6. Submit to Google Apps Script
+    document.getElementById('regForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const errBox = document.getElementById('submitError');
+      const submitBtn = document.getElementById('submitBtn');
+      errBox.className = 'status-msg';
+      errBox.textContent = '';
+
+      const mode = document.querySelector('input[name="attendanceMode"]:checked').value;
+      if (mode === 'Online' && (!userCoords || userCoords.distKm < MIN_ONLINE_KM)) {
+        errBox.className = 'status-msg status-err';
+        errBox.textContent = 'Vui lòng xác thực vị trí GPS hợp lệ (≥ 45 km) trước khi gửi đăng ký Online.';
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Đang tải minh chứng & gửi đăng ký...';
+
+      try {
+        const eligInput = document.getElementById('eligibilityFile');
+        const recInput = document.getElementById('receiptFile');
+
+        const eligibilityPayload = eligInput.files[0] ? await prepareFilePayload(eligInput.files[0]) : null;
+        const receiptPayload = recInput.files[0] ? await prepareFilePayload(recInput.files[0]) : null;
+
+        const payload = {
+          fullName: document.getElementById('fullName').value.trim(),
+          email: document.getElementById('email').value.trim(),
+          phone: document.getElementById('phone').value.trim(),
+          affiliation: document.getElementById('affiliation').value.trim(),
+          role: document.getElementById('role').value,
+          province: document.getElementById('province').value.trim(),
+          attendanceMode: mode,
+          feeCategory: document.getElementById('feeCategory').value,
+          eligibilityFile: eligibilityPayload,
+          receiptFile: receiptPayload,
+          lat: userCoords ? userCoords.lat : '',
+          lng: userCoords ? userCoords.lng : '',
+          accuracy: userCoords ? userCoords.accuracy : ''
+        };
+
+        const res = await fetch(SCRIPT_URL, {
+          method: 'POST',
+          redirect: 'follow',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify(payload)
+        });
+        const result = await res.json();
+
+        if (!result.ok) {
+          throw new Error(result.error || 'Đăng ký không thành công.');
+        }
+
+        document.getElementById('formWrapper').style.display = 'none';
+        const successScreen = document.getElementById('successScreen');
+        successScreen.style.display = 'block';
+        document.getElementById('successDetail').innerHTML =
+          'Cảm ơn <strong>' + payload.fullName + '</strong> đã đăng ký tham dự buổi họp mặt <em>Philosophy of Science</em> theo hình thức <strong>' +
+          (mode === 'Online' ? 'Trực tuyến (Online)' : 'Trực tiếp (Onsite tại 357 Lê Hồng Phong)') + '</strong>.';
+      } catch (err) {
+        errBox.className = 'status-msg status-err';
+        errBox.textContent = err.message;
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Gửi đăng ký tham dự';
+      }
+    });
+  </script>
+</body>
+</html>
