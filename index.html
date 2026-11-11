@@ -282,7 +282,7 @@
         <ul>
           <li><strong>Thời gian:</strong> 14g – 17g ngày 21/11/2026</li>
           <li><strong>Địa điểm:</strong> Phương Nam Education — 357 Lê Hồng Phong, Phường Vườn Lài, TPHCM</li>
-          <li><strong>Quy định Online:</strong> Hình thức <strong>Online (giới hạn 50 suất)</strong> chỉ mở cho người tham dự đang ở cách địa điểm tổ chức <strong>từ 45 km trở lên</strong> (xác thực GPS tự động trên trình duyệt).</li>
+          <li><strong>Quy định Online:</strong> Hình thức <strong>Online (giới hạn 50 suất)</strong> chỉ mở cho người tham dự đang ở cách địa điểm tổ chức <strong>từ 45 km trở lên</strong> (xác thực tín hiệu GPS thực tế, không hỗ trợ VPN).</li>
         </ul>
         <h2>Đối tượng & Phí tham dự</h2>
         <ul>
@@ -320,7 +320,7 @@
                 </label>
                 <span class="slot-badge" id="slotBadge">Đang kiểm tra suất...</span>
               </div>
-              <p class="mode-desc">Dành riêng cho người tham dự cách địa điểm tổ chức từ 45 km trở lên (tối đa 50 suất).</p>
+              <p class="mode-desc">Dành riêng cho người tham dự ở các tỉnh/thành khác hoặc nước ngoài (cách địa điểm ≥ 45 km, tối đa 50 suất).</p>
               <div class="gps-box">
                 <button type="button" class="btn-secondary" id="gpsBtn" onclick="verifyGPS()">📍 Xác thực vị trí GPS để mở khóa Online</button>
                 <div id="gpsStatus" class="status-msg"></div>
@@ -362,8 +362,8 @@
         </div>
 
         <div class="field">
-          <label class="field-label">Tỉnh / Thành phố hiện tại <span class="req">*</span></label>
-          <input type="text" id="province" required placeholder="Ví dụ: TP. Hồ Chí Minh, Cần Thơ, Đà Nẵng, Hà Nội..." />
+          <label class="field-label">Tỉnh / Thành phố / Quốc gia hiện tại <span class="req">*</span></label>
+          <input type="text" id="province" required placeholder="Ví dụ: TP. Hồ Chí Minh, Cần Thơ, Đà Nẵng, Singapore..." />
         </div>
 
         <div class="section-title">3. Phí tham dự & Minh chứng</div>
@@ -421,6 +421,7 @@
     const VENUE_LAT = 10.763216;
     const VENUE_LNG = 106.675506;
     const MIN_ONLINE_KM = 45;
+    const MAX_GPS_ACCURACY_M = 2500;
 
     let remainingOnlineSlots = 50;
     let userCoords = null;
@@ -470,7 +471,7 @@
       return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     }
 
-    // 4. Browser GPS verification
+    // 4. Browser GPS verification (Distance >= 45 km AND Accuracy <= 2500 m)
     function verifyGPS() {
       const statusEl = document.getElementById('gpsStatus');
       const gpsBtn = document.getElementById('gpsBtn');
@@ -491,7 +492,7 @@
 
       gpsBtn.disabled = true;
       statusEl.className = 'status-msg status-warn';
-      statusEl.textContent = 'Đang kiểm tra vị trí GPS... Vui lòng chọn "Cho phép / Allow" khi trình duyệt hiển thị thông báo.';
+      statusEl.textContent = 'Đang kiểm tra tín hiệu GPS... Vui lòng chọn "Cho phép / Allow" khi trình duyệt hiển thị thông báo.';
 
       navigator.geolocation.getCurrentPosition(
         function(pos) {
@@ -502,21 +503,34 @@
           const distKm = calcDistanceKm(VENUE_LAT, VENUE_LNG, lat, lng);
           userCoords = { lat: lat, lng: lng, accuracy: acc, distKm: distKm };
 
-          if (distKm >= MIN_ONLINE_KM) {
-            onlineRadio.disabled = false;
-            onlineRadio.checked = true;
-            onlineCard.classList.remove('disabled');
-            syncModeUI();
-            statusEl.className = 'status-msg status-ok';
-            statusEl.textContent = 'Xác thực hợp lệ: Vị trí của bạn cách địa điểm ' + distKm.toFixed(1) + ' km (≥ 45 km). Đã mở khóa đăng ký Online!';
-          } else {
+          if (distKm < MIN_ONLINE_KM) {
             onlineRadio.disabled = true;
             onlineRadio.checked = false;
+            onlineCard.classList.add('disabled');
             document.querySelector('input[name="attendanceMode"][value="Onsite"]').checked = true;
             syncModeUI();
             statusEl.className = 'status-msg status-err';
             statusEl.textContent = 'Vị trí hiện tại cách địa điểm ' + distKm.toFixed(1) + ' km (< 45 km). Suất Online chỉ mở cho người ở cách địa điểm từ 45 km trở lên — vui lòng đăng ký tham dự Trực tiếp (Onsite).';
+            return;
           }
+
+          if (!Number.isFinite(acc) || acc <= 0 || acc > MAX_GPS_ACCURACY_M) {
+            onlineRadio.disabled = true;
+            onlineRadio.checked = false;
+            onlineCard.classList.add('disabled');
+            document.querySelector('input[name="attendanceMode"][value="Onsite"]').checked = true;
+            syncModeUI();
+            statusEl.className = 'status-msg status-warn';
+            statusEl.textContent = 'Tín hiệu định vị chưa đủ chính xác (sai số ±' + Math.round(acc) + ' m > 2.500 m — thường gặp trên máy tính cắm dây mạng LAN hoặc đang bật VPN). Nếu bạn ở ngoài TPHCM hoặc ở nước ngoài, vui lòng tắt VPN, bật Wi-Fi hoặc mở link này trên điện thoại để mở khóa Online.';
+            return;
+          }
+
+          onlineRadio.disabled = false;
+          onlineRadio.checked = true;
+          onlineCard.classList.remove('disabled');
+          syncModeUI();
+          statusEl.className = 'status-msg status-ok';
+          statusEl.textContent = 'Xác thực hợp lệ: Cách địa điểm ' + distKm.toFixed(1) + ' km (sai số GPS ±' + Math.round(acc) + ' m). Đã mở khóa đăng ký Online!';
         },
         function(err) {
           gpsBtn.disabled = false;
@@ -625,9 +639,16 @@
       errBox.textContent = '';
 
       const mode = document.querySelector('input[name="attendanceMode"]:checked').value;
-      if (mode === 'Online' && (!userCoords || userCoords.distKm < MIN_ONLINE_KM)) {
+      if (
+        mode === 'Online' &&
+        (!userCoords ||
+          userCoords.distKm < MIN_ONLINE_KM ||
+          !Number.isFinite(userCoords.accuracy) ||
+          userCoords.accuracy <= 0 ||
+          userCoords.accuracy > MAX_GPS_ACCURACY_M)
+      ) {
         errBox.className = 'status-msg status-err';
-        errBox.textContent = 'Vui lòng xác thực vị trí GPS hợp lệ (≥ 45 km) trước khi gửi đăng ký Online.';
+        errBox.textContent = 'Vui lòng xác thực vị trí GPS hợp lệ (khoảng cách ≥ 45 km, sai số ≤ 2.500 m) trước khi gửi đăng ký Online.';
         return;
       }
 
